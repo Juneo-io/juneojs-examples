@@ -1,0 +1,21 @@
+{
+  "name": "juneojs-examples",
+  "version": "1.0.0",
+  "description": "Usage examples of JuneoJS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "Juneo",
+    "blockchain"
+  ],
+  "author": "Aleksander Waslet",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@types/node": "20.6.5",
+    "dotenv": "16.3.1",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "juneojs": "0.0.45"
+  }
+}
