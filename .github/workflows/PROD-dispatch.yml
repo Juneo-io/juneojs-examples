@@ -7,7 +7,20 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
       - name: Install Dependencies
         run: npm install
+
       - name: Build
         run: npm run build
+
+      - name: Update juneojs package to latest version
+        run: npm install juneojs@latest
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Update juneojs to latest version"
+          git push
