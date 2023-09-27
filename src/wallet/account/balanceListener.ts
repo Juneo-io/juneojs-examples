@@ -1,8 +1,10 @@
-import { ChainAccount, MCNWallet, MCNAccount, MCNProvider, SocotraJUNEChain, BalanceListener, BalanceUpdateEvent, SocotraJUNEAssetId } from "juneojs"
+import * as dotenv from 'dotenv';
+import { BalanceListener, BalanceUpdateEvent, ChainAccount, MCNAccount, MCNProvider, MCNWallet, SocotraJUNEAssetId, SocotraJUNEChain } from "juneojs";
 
+dotenv.config();
 async function main () {
     const provider: MCNProvider = new MCNProvider()
-    const wallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
     const juneAccount: ChainAccount = mcnAccount.getAccount(SocotraJUNEChain.id)
     // the asset id of the balance we will listen to

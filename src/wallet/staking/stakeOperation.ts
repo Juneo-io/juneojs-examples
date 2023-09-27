@@ -1,9 +1,18 @@
-import { DelegateOperation, ExecutableOperation, MCNWallet, MCNAccount, NetworkOperationStatus,
-    OperationSummary, MCNProvider, PlatformBlockchain, StakingOperationSummary, ValidateOperation, now } from "juneojs"
+import * as dotenv from 'dotenv';
+import {
+    DelegateOperation, ExecutableOperation,
+    MCNAccount,
+    MCNProvider,
+    MCNWallet,
+    NetworkOperationStatus,
+    OperationSummary,
+    PlatformBlockchain, StakingOperationSummary, ValidateOperation, now
+} from "juneojs";
 
+dotenv.config();
 async function main () {
     const provider: MCNProvider = new MCNProvider()
-    const wallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
     // the chain which we will perform an action on
     const platformChain: PlatformBlockchain = provider.platform.chain

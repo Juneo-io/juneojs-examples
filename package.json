@@ -12,7 +12,7 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/node": "20.6.5",
-    "dotenv": "16.3.1",
+    "dotenv": "^16.3.1",
     "typescript": "5.2.2"
   },
   "dependencies": {

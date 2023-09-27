@@ -1,9 +1,18 @@
-import { ExecutableOperation, JEVMBlockchain, MCNWallet, MCNAccount, NetworkOperationStatus,
-    OperationSummary, MCNProvider, SocotraJUNEChain, SocotraWJUNEAsset, WrapOperation } from "juneojs"
+import * as dotenv from 'dotenv';
+import {
+    ExecutableOperation, JEVMBlockchain,
+    MCNAccount,
+    MCNProvider,
+    MCNWallet,
+    NetworkOperationStatus,
+    OperationSummary,
+    SocotraJUNEChain, SocotraWJUNEAsset, WrapOperation
+} from "juneojs";
 
+dotenv.config();
 async function main () {
     const provider: MCNProvider = new MCNProvider()
-    const wallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
     // the chain which we will perform an action on
     const juneChain: JEVMBlockchain = SocotraJUNEChain

@@ -1,9 +1,17 @@
-import { CrossOperation, ExecutableOperation, JEVMBlockchain, JVMBlockchain, MCNWallet, MCNAccount,
-    OperationSummary, MCNProvider, SocotraJUNEAssetId, SocotraJUNEChain, SocotraJVMChain } from "juneojs"
+import * as dotenv from 'dotenv';
+import {
+    CrossOperation, ExecutableOperation, JEVMBlockchain, JVMBlockchain,
+    MCNAccount,
+    MCNProvider,
+    MCNWallet,
+    OperationSummary,
+    SocotraJUNEAssetId, SocotraJUNEChain, SocotraJVMChain
+} from "juneojs";
 
+dotenv.config();
 async function main () {
     const provider: MCNProvider = new MCNProvider()
-    const wallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
     // the chain which we will perform the cross from
     const juneChain: JEVMBlockchain = SocotraJUNEChain

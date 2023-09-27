@@ -1,8 +1,10 @@
-import { MCNWallet, VMWallet, SocotraJVMChain, SocotraJUNEChain } from 'juneojs'
+import * as dotenv from 'dotenv';
+import { MCNWallet, SocotraJUNEChain, SocotraJVMChain, VMWallet } from 'juneojs';
 
+dotenv.config();
 async function main() {
     // recovering wallet from mnemonic
-    const masterWallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     const jvmChainAddress: string = masterWallet.getAddress(SocotraJVMChain)
     console.log(jvmChainAddress)
     const juneChainWallet: VMWallet = masterWallet.getWallet(SocotraJUNEChain)

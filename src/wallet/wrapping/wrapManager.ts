@@ -1,9 +1,17 @@
-import { MCNProvider, MCNWallet, WrapManager, WrappedAsset, SocotraWJUNEAsset, SocotraJUNEChain,
-    JEVMBlockchain, EVMFeeData } from 'juneojs'
+import * as dotenv from 'dotenv';
+import {
+    EVMFeeData,
+    JEVMBlockchain,
+    MCNProvider, MCNWallet,
+    SocotraJUNEChain,
+    SocotraWJUNEAsset,
+    WrapManager, WrappedAsset
+} from 'juneojs';
 
+dotenv.config();
 async function main () {
     const provider: MCNProvider = new MCNProvider()
-    const wallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     // wrap manager to handle wrapping
     let manager: WrapManager = WrapManager.from(provider, wallet, SocotraJUNEChain)
     // instantiation using api and wallet

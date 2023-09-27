@@ -1,9 +1,16 @@
-import { AssetValue, ChainAccount, EVMAccount, JEVMBlockchain, MCNWallet, MCNAccount,
-    MCNProvider, SocotraJUNEAsset, SocotraJUNEChain, SocotraWJUNEAsset } from 'juneojs'
+import * as dotenv from 'dotenv';
+import {
+    AssetValue, ChainAccount, EVMAccount, JEVMBlockchain,
+    MCNAccount,
+    MCNProvider,
+    MCNWallet,
+    SocotraJUNEAsset, SocotraJUNEChain, SocotraWJUNEAsset
+} from 'juneojs';
 
+dotenv.config();
 async function main () {
     const provider: MCNProvider = new MCNProvider()
-    const wallet: MCNWallet = MCNWallet.recover('raven whip pave toy benefit moment twin acid wasp satisfy crash april')
+    const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
     // create a MCNAccount from the provider with the chains of the default used MCN
     const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
     // getting the account of one chain

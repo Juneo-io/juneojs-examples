@@ -1,8 +1,12 @@
-import {
-    CrossOperation, ExecutableOperation, JEVMBlockchain, JVMBlockchain, MCNWallet, MCNAccount,
-    OperationSummary, MCNProvider, SocotraJUNEAssetId, SocotraJUNEChain, SocotraJVMChain
-} from 'juneojs'
 import * as dotenv from 'dotenv'
+import {
+    CrossOperation, ExecutableOperation, JEVMBlockchain, JVMBlockchain,
+    MCNAccount,
+    MCNProvider,
+    MCNWallet,
+    OperationSummary,
+    SocotraJUNEAssetId, SocotraJUNEChain, SocotraJVMChain
+} from 'juneojs'
 dotenv.config()
 
 
