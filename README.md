@@ -37,3 +37,7 @@ npx ts-node src/<example-name>
 - `docs/crossJunetoJVM.ts`: This example shows how to send a cross-chain transaction from JUNE Chain to the JVM Chain.
 
 More documentation will be provided in the future. Stay tuned!
+
+## License
+
+This project is licensed under the BSD 3-Clause License. See the [LICENSE](LICENSE) file for more details.
