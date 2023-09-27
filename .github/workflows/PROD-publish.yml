@@ -1,0 +1,15 @@
+name: PROD upgrade juneojs version
+on:
+  repository_dispatch:
+    types: [update-juneojs-version]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
