@@ -1,7 +1,5 @@
-name: PROD upgrade juneojs version
-on:
-  repository_dispatch:
-    types: [update-juneojs-version]
+name: PROD_dispatch
+on: [repository_dispatch]
 
 jobs:
   build:
