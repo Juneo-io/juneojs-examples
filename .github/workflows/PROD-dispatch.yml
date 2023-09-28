@@ -14,6 +14,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Set npm to save exact version numbers
+        run: npm config set save-exact true
+
       - name: Update juneojs package to latest version
         run: npm install juneojs@latest
 
