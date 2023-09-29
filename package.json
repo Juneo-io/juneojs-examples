@@ -1,11 +1,15 @@
 {
   "name": "juneojs-examples",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Usage examples of JuneoJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "fix": "npm run prettier && npm run lint",
+    "lint": "eslint . --ext .ts --fix",
+    "prettier": "npx prettier . --write"
   },
   "keywords": [
     "Juneo",
@@ -15,7 +19,14 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/node": "20.7.1",
+    "@typescript-eslint/eslint-plugin": "6.7.3",
     "dotenv": "16.3.1",
+    "eslint": "8.50.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.28.1",
+    "eslint-plugin-n": "16.1.0",
+    "eslint-plugin-prettier": "5.0.0",
+    "prettier": "3.0.3",
     "ts-node": "10.9.1",
     "typescript": "5.2.2"
   },
