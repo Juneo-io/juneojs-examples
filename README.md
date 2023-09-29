@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This repository contains example projects demonstrating the use of the JuneoJS library for somes functionality.
+This repository contains example projects demonstrating the use of the JuneoJS library for some functionalities.
 
 ## Prerequisites
 

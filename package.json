@@ -1,11 +1,10 @@
 {
   "name": "juneojs-examples",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Usage examples of JuneoJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prepare": "npm run build",
     "build": "tsc"
   },
   "keywords": [
@@ -15,8 +14,9 @@
   "author": "Aleksander Waslet",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@types/node": "20.6.5",
+    "@types/node": "20.7.1",
     "dotenv": "16.3.1",
+    "ts-node": "10.9.1",
     "typescript": "5.2.2"
   },
   "dependencies": {
