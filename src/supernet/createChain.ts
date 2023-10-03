@@ -21,7 +21,7 @@ async function main() {
     masterWallet.getAddress(provider.platform.chain),
   ]
   const utxoSet: Utxo[] = await fetchUtxos(provider.platform, sendersAddresses)
-  const fee: number = (await provider.getFees()).createBlockchainTxFee
+  const fee: number = (await provider.info.getTxFee()).createBlockchainTxFee
   const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
   const createSupernetTx: CreateSupernetTransaction =
     CreateSupernetTransaction.parse(
