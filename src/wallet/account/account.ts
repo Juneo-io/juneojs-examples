@@ -1,15 +1,15 @@
 import * as dotenv from 'dotenv'
 import {
-  type AssetValue,
-  type ChainAccount,
   EVMAccount,
-  type JEVMBlockchain,
   MCNAccount,
   MCNProvider,
   MCNWallet,
   SocotraJUNEAsset,
   SocotraJUNEChain,
   SocotraWJUNEAsset,
+  type AssetValue,
+  type ChainAccount,
+  type JEVMBlockchain,
 } from 'juneojs'
 
 dotenv.config()
