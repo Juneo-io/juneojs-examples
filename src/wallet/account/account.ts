@@ -10,6 +10,8 @@ import {
   type AssetValue,
   type ChainAccount,
   type JEVMBlockchain,
+  UtxoAccount,
+  JVMAccount,
 } from 'juneojs'
 
 dotenv.config()
@@ -23,9 +25,22 @@ async function main() {
   // in the creation of the MCNAccount you will get an error
   const account: ChainAccount = mcnAccount.getAccount(SocotraJUNEChain.id)
   // we can fetch the balances
-  await account.fetchAllBalances()
+  // it can be done individually
+  await account.fetchBalance(SocotraJUNEAsset.assetId)
+  // or with multiple values
+  await account.fetchAllBalances([
+    SocotraWJUNEAsset.assetId,
+    SocotraJUNEAsset.assetId,
+  ])
+  // the balance can be retrieved with either a provider and an asset id
+  // the provider will try to gather information about the asset id from the network
+  let balance: AssetValue = await account.getBalance(
+    provider,
+    SocotraJUNEAsset.assetId,
+  )
+  // or with a TokenAsset that already holds information about the asset (type, name, symbol, decimals)
+  balance = account.getAssetBalance(SocotraJUNEAsset)
   // the returned balance will be an AssetValue which contains useful methods
-  const balance: AssetValue = account.getBalance(SocotraJUNEAsset)
   // this is the value that must be used to create transactions
   console.log(balance.value)
   // this value is human friendly and shows all the decimals
@@ -37,17 +52,14 @@ async function main() {
 
   // note that the JVM-Chain and Platform-Chain are both utxo accounts
   // and EVM chains are using nonce accounts
+  const jvmAccount: UtxoAccount = new JVMAccount(provider, wallet)
   const juneChain: JEVMBlockchain = SocotraJUNEChain
   const juneAccount: EVMAccount = new EVMAccount(provider, juneChain.id, wallet)
-  // in utxo accounts you do not need to register assets but for nonce accounts
-  // if you want to keep track of the balance of an ERC20 for example you need
-  // to register them manually before fetching the balances using registerAssets
-  // here for example we register the wrapped june to be tracked by this account
-  juneAccount.registerAssets([SocotraWJUNEAsset])
-  // it is also possible to register it using an asset id
-  juneAccount.registerAssets(['0x333e51E9908dcF4Ae79250757ecC3faa21f24554'])
-  // make sure that you are registering an asset from the correct chain
-  // it is not necessary to register the gas token of the chain
+  // in utxo accounts all the balances that are on the account on the network
+  // should already be fetched because of the nature of utxos.
+  // however in nonce accounts not all the balances at a given block can be
+  // fetched that easily from the network. So if you want to get the balance
+  // of a specific asset on such account, you should make sure that it is fetched first.
 }
 
 main().catch((error) => {
