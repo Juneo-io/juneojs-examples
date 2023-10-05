@@ -1,6 +1,6 @@
 {
   "name": "juneojs-examples",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Usage examples of JuneoJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,6 +31,6 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "juneojs": "0.0.51"
+    "juneojs": "0.0.52"
   }
 }
