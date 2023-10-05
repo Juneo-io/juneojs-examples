@@ -23,7 +23,7 @@ async function main() {
   // the chain we will perform the cross to
   const jvmChain: JVMBlockchain = SocotraJVMChain
   // we need balances to perform the operation
-  await mcnAccount.fetchAllBalances()
+  await mcnAccount.fetchChainsBalances()
   const assetId: string = SocotraJUNEAssetId
   const amount: bigint = BigInt('1100000000000000000') // 1.1 JUNE
   // we instantiate a cross operation that we want to perform
