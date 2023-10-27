@@ -31,10 +31,12 @@ async function main() {
   const vmId: DynamicId = new DynamicId('supernetevm')
   const fxIds: DynamicId[] = []
   const chainId: number = 330333
+  const genesisMintAddress: string = '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
+  const genesisMintAmount: bigint = BigInt('1000000000000000000000000')
   const genesisData: string = new SupernetEVMGenesis(chainId, [
     new EVMAllocation(
-      '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C',
-      BigInt('1000000000000000000000000'),
+      genesisMintAddress,
+      genesisMintAmount
     ),
   ]).generate()
   const createChainTx: CreateChainTransaction = buildCreateChainTransaction(
