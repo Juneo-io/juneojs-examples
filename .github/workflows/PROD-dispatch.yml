@@ -22,6 +22,9 @@ jobs:
       - name: Update juneojs package to latest version
         run: npm install juneojs@latest
 
+      - name: Build to check if juneojs update broke anything
+        run: npm run build
+
       - name: Commit and push if changed
         run: |
           git config --global user.name 'GitHub Actions'
