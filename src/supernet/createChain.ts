@@ -39,6 +39,13 @@ async function main() {
       genesisMintAmount
     ),
   ]).generate()
+
+  // Checks, if not updated will throw error
+  if(supernetId === 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP') throw Error("Please update the supernetId variable to that of a supernet you wish to validate.")
+  if(chainName === 'Chain A') throw Error("Please update the chainName variable.")
+  if(chainId === 330333) throw Error("Please update the chainId vairable.")
+  if(genesisMintAddress === '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C') throw Error("Please update the genesisMintAddress variable to an address you can access.")
+  
   const createChainTx: CreateChainTransaction = buildCreateChainTransaction(
     utxoSet,
     sendersAddresses,
