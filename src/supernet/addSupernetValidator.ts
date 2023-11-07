@@ -33,7 +33,8 @@ async function main() {
     )
 
   // Checks, if not updated will throw error
-  if (supernetId === 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP') throw Error('Please update the supernetId variable')
+  if (supernetId === 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP')
+    throw Error('Please update the supernetId variable')
 
   const addSupernetValidatorTx: AddSupernetValidatorTransaction =
     buildAddSupernetValidatorTransaction(
