@@ -31,14 +31,26 @@ async function main() {
   const vmId: DynamicId = new DynamicId('supernetevm')
   const fxIds: DynamicId[] = []
   const chainId: number = 330333
-  const genesisMintAddress: string = '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
+  const genesisMintAddress: string =
+    '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
   const genesisMintAmount: bigint = BigInt('1000000000000000000000000')
   const genesisData: string = new SupernetEVMGenesis(chainId, [
-    new EVMAllocation(
-      genesisMintAddress,
-      genesisMintAmount
-    ),
+    new EVMAllocation(genesisMintAddress, genesisMintAmount),
   ]).generate()
+
+  // Checks, if not updated will throw error
+  if (supernetId === 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP')
+    throw Error(
+      'Please update the supernetId variable to that of a supernet you wish to validate.',
+    )
+  if (chainName === 'Chain A')
+    throw Error('Please update the chainName variable.')
+  if (chainId === 330333) throw Error('Please update the chainId variable.')
+  if (genesisMintAddress === '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C')
+    throw Error(
+      'Please update the genesisMintAddress variable to an address you can access.',
+    )
+
   const createChainTx: CreateChainTransaction = buildCreateChainTransaction(
     utxoSet,
     sendersAddresses,
