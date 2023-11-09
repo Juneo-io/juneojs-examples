@@ -24,7 +24,8 @@ async function main() {
   const fee: number = (await provider.info.getTxFee()).addSupernetValidatorFee
   const nodeId: string = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
   const startTime: bigint = now() + BigInt(30)
-  const endTime: bigint = startTime + BigInt(3600 * 24 * 14 + 30)
+  const durationInDays: number = 4
+  const endTime: bigint = startTime + BigInt(3600 * 24 * durationInDays + 30)
   const weight: bigint = BigInt(100)
   const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
   const createSupernetTx: CreateSupernetTransaction =
