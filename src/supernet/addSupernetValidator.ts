@@ -12,6 +12,7 @@ import {
   fetchUtxos,
   now,
 } from 'juneojs'
+import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 
 dotenv.config()
 async function main() {
@@ -33,9 +34,9 @@ async function main() {
       (await provider.platform.getTx(supernetId)).tx,
     )
 
-  // Checks, if not updated will throw error
-  if (supernetId === 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP')
-    throw Error('Please update the supernetId variable')
+  // Checks before executing script
+  supernetIdCheck(supernetId)
+  nodeIdCheck(nodeId)
 
   const addSupernetValidatorTx: AddSupernetValidatorTransaction =
     buildAddSupernetValidatorTransaction(
