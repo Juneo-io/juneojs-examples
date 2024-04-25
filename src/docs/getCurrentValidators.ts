@@ -1,7 +1,7 @@
-import { GetCurrentValidatorsResponse, MCNProvider, TestNetwork } from 'juneojs'
+import { GetCurrentValidatorsResponse, MCNProvider, SocotraNetwork } from 'juneojs'
 
 async function main() {
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const currentValidators: GetCurrentValidatorsResponse =
     await provider.platformApi.getCurrentValidators()
   const nodeId: string = 'NodeID-DXGCAZFrcwfBmgXMePrTm2EU8N3s46wEq'

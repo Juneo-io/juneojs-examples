@@ -8,14 +8,14 @@ import {
   NetworkOperationStatus,
   type OperationSummary,
   type StakingOperationSummary,
-  TestNetwork,
+  SocotraNetwork,
   ValidatePrimaryOperation,
   now,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
   // the node id where to validate funds

@@ -10,13 +10,13 @@ import {
   buildRemoveSupernetValidatorTransaction,
   fetchUtxos,
   RemoveSupernetValidatorTransaction,
-  TestNetwork,
+  SocotraNetwork,
 } from 'juneojs'
 import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const sendersAddresses: string[] = [
     masterWallet.getAddress(provider.platformChain),

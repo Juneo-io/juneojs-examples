@@ -2,14 +2,14 @@ import {
   MCNAccount,
   MCNProvider,
   MCNWallet,
-  TestNetwork,
+  SocotraNetwork,
   ValidatePrimaryOperation,
   now,
 } from 'juneojs'
 
 async function main() {
   // provider to interact with the MCN
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   // recovering wallet used to sign transactions
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   // an account is needed to use operations

@@ -9,12 +9,12 @@ import {
   type ChainAccount,
   UtxoAccount,
   JVMAccount,
-  TestNetwork,
+  SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   // create a MCNAccount from the provider with the chains of the default used MCN
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)

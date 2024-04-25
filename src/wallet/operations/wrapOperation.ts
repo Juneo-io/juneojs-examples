@@ -6,13 +6,13 @@ import {
   MCNWallet,
   NetworkOperationStatus,
   type OperationSummary,
-  TestNetwork,
+  SocotraNetwork,
   WrapOperation,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
   // we instantiate a wrap operation that we want to perform on the june chain

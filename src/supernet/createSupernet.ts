@@ -3,7 +3,7 @@ import {
   type CreateSupernetTransaction,
   MCNProvider,
   MCNWallet,
-  TestNetwork,
+  SocotraNetwork,
   type Utxo,
   buildCreateSupernetTransaction,
   fetchUtxos,
@@ -11,7 +11,7 @@ import {
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider(TestNetwork)
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const sendersAddresses: string[] = [
     masterWallet.getAddress(provider.platformChain),
