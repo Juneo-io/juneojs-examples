@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv'
 import {
-  type AddSupernetValidatorTransaction,
   Address,
   CreateSupernetTransaction,
   MCNProvider,
@@ -10,25 +9,28 @@ import {
   type Utxo,
   buildRemoveSupernetValidatorTransaction,
   fetchUtxos,
-  now,
   RemoveSupernetValidatorTransaction,
+  TestNetwork,
 } from 'juneojs'
 import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
+  const provider: MCNProvider = new MCNProvider(TestNetwork)
   const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const sendersAddresses: string[] = [
-    masterWallet.getAddress(provider.platform.chain),
+    masterWallet.getAddress(provider.platformChain),
   ]
-  const utxoSet: Utxo[] = await fetchUtxos(provider.platform, sendersAddresses)
+  const utxoSet: Utxo[] = await fetchUtxos(
+    provider.platformApi,
+    sendersAddresses,
+  )
   const fee: number = (await provider.info.getTxFee()).addSupernetValidatorFee
   const nodeId: string = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
   const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
   const createSupernetTx: CreateSupernetTransaction =
     CreateSupernetTransaction.parse(
-      (await provider.platform.getTx(supernetId)).tx,
+      (await provider.platformApi.getTx(supernetId)).tx,
     )
 
   // Checks before executing script
@@ -40,17 +42,17 @@ async function main() {
       utxoSet,
       sendersAddresses,
       BigInt(fee),
-      provider.platform.chain,
+      provider.platformChain,
       new NodeId(nodeId),
       new SupernetId(supernetId),
       createSupernetTx.getSupernetAuth(Address.toAddresses(sendersAddresses)),
-      masterWallet.getAddress(provider.platform.chain),
+      masterWallet.getAddress(provider.platformChain),
       provider.mcn.id,
     )
   const txId: string = (
-    await provider.platform.issueTx(
+    await provider.platformApi.issueTx(
       removeSupernetValidatorTx
-        .signTransaction([masterWallet.getWallet(provider.platform.chain)])
+        .signTransaction([masterWallet.getWallet(provider.platformChain)])
         .toCHex(),
     )
   ).txID

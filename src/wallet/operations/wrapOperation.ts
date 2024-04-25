@@ -1,28 +1,25 @@
 import * as dotenv from 'dotenv'
 import {
   type ExecutableOperation,
-  type JEVMBlockchain,
   MCNAccount,
   MCNProvider,
   MCNWallet,
   NetworkOperationStatus,
   type OperationSummary,
-  SocotraJUNEChain,
-  SocotraWJUNEAsset,
+  TestNetwork,
   WrapOperation,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
+  const provider: MCNProvider = new MCNProvider(TestNetwork)
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
-  // the chain which we will perform an action on
-  const juneChain: JEVMBlockchain = SocotraJUNEChain
-  // we instantiate a wrap operation that we want to perform on the chain
+  // we instantiate a wrap operation that we want to perform on the june chain
+  // note that wrap operation can only be done on EVM chains
   const wrapOperation: WrapOperation = new WrapOperation(
-    juneChain,
-    SocotraWJUNEAsset,
+    provider.juneChain,
+    provider.juneChain.wrappedAsset,
     BigInt('1000000000000000000'),
   )
   // estimate the operation to get a summary

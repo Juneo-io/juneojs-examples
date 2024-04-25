@@ -3,6 +3,7 @@ import {
   type CreateSupernetTransaction,
   MCNProvider,
   MCNWallet,
+  TestNetwork,
   type Utxo,
   buildCreateSupernetTransaction,
   fetchUtxos,
@@ -10,28 +11,31 @@ import {
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
+  const provider: MCNProvider = new MCNProvider(TestNetwork)
   const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const sendersAddresses: string[] = [
-    masterWallet.getAddress(provider.platform.chain),
+    masterWallet.getAddress(provider.platformChain),
   ]
-  const utxoSet: Utxo[] = await fetchUtxos(provider.platform, sendersAddresses)
+  const utxoSet: Utxo[] = await fetchUtxos(
+    provider.platformApi,
+    sendersAddresses,
+  )
   const fee: number = (await provider.info.getTxFee()).createSupernetTxFee
   const createSupernetTx: CreateSupernetTransaction =
     buildCreateSupernetTransaction(
       utxoSet,
       sendersAddresses,
       BigInt(fee),
-      provider.platform.chain,
+      provider.platformChain,
       sendersAddresses,
       sendersAddresses.length,
-      masterWallet.getAddress(provider.platform.chain),
+      masterWallet.getAddress(provider.platformChain),
       provider.mcn.id,
     )
   const txId: string = (
-    await provider.platform.issueTx(
+    await provider.platformApi.issueTx(
       createSupernetTx
-        .signTransaction([masterWallet.getWallet(provider.platform.chain)])
+        .signTransaction([masterWallet.getWallet(provider.platformChain)])
         .toCHex(),
     )
   ).txID
