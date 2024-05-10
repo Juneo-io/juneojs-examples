@@ -1,17 +1,13 @@
 import * as dotenv from 'dotenv'
 import {
-  Address,
-  type CreateChainTransaction,
-  CreateSupernetTransaction,
-  DynamicId,
   EVMAllocation,
   MCNProvider,
   MCNWallet,
   SupernetEVMGenesis,
   SocotraNetwork,
-  type Utxo,
-  buildCreateChainTransaction,
-  fetchUtxos,
+  CreateChainOperation,
+  NetworkOperationStatus,
+  MCNAccount,
 } from 'juneojs'
 import {
   chainIdCheck,
@@ -23,23 +19,13 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
-  const sendersAddresses: string[] = [
-    masterWallet.getAddress(provider.platformChain),
-  ]
-  const utxoSet: Utxo[] = await fetchUtxos(
-    provider.platformApi,
-    sendersAddresses,
-  )
-  const fee: number = (await provider.info.getTxFee()).createBlockchainTxFee
+  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+
+  // Operation parameters
   const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
-  const createSupernetTx: CreateSupernetTransaction =
-    CreateSupernetTransaction.parse(
-      (await provider.platformApi.getTx(supernetId)).tx,
-    )
   const chainName: string = 'Chain A'
-  const vmId: DynamicId = new DynamicId('supernetevm')
-  const fxIds: DynamicId[] = []
+  const vmId: string = 'supernetevm'
   const chainId: number = 330333
   const genesisMintAddress: string =
     '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
@@ -54,29 +40,22 @@ async function main() {
   chainIdCheck(chainId)
   genesisMintAddressCheck(genesisMintAddress)
 
-  const createChainTx: CreateChainTransaction = buildCreateChainTransaction(
-    utxoSet,
-    sendersAddresses,
-    BigInt(fee),
+  // Operation instantiation and execution
+  const createChainOperation: CreateChainOperation = new CreateChainOperation(
     provider.platformChain,
     supernetId,
     chainName,
-    provider.platformChain.assetId,
     vmId,
-    fxIds,
     genesisData,
-    createSupernetTx.getSupernetAuth(Address.toAddresses(sendersAddresses)),
-    masterWallet.getAddress(provider.platformChain),
-    provider.mcn.id,
   )
-  const txId: string = (
-    await provider.platformApi.issueTx(
-      createChainTx
-        .signTransaction([masterWallet.getWallet(provider.platformChain)])
-        .toCHex(),
+  const summary = await mcnAccount.estimate(createChainOperation)
+  await mcnAccount.execute(summary)
+
+  if (summary.getExecutable().status === NetworkOperationStatus.Done) {
+    console.log(
+      `Created chain with id: ${summary.getExecutable().receipts[0].transactionId}`,
     )
-  ).txID
-  console.log(`Created chain with id: ${txId}`)
+  }
 }
 
 main().catch((error) => {

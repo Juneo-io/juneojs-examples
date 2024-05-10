@@ -1,45 +1,40 @@
 import * as dotenv from 'dotenv'
 import {
-  type CreateSupernetTransaction,
+  CreateSupernetOperation,
+  MCNAccount,
   MCNProvider,
   MCNWallet,
+  NetworkOperationStatus,
   SocotraNetwork,
-  type Utxo,
-  buildCreateSupernetTransaction,
-  fetchUtxos,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
-  const sendersAddresses: string[] = [
-    masterWallet.getAddress(provider.platformChain),
-  ]
-  const utxoSet: Utxo[] = await fetchUtxos(
-    provider.platformApi,
-    sendersAddresses,
-  )
-  const fee: number = (await provider.info.getTxFee()).createSupernetTxFee
-  const createSupernetTx: CreateSupernetTransaction =
-    buildCreateSupernetTransaction(
-      utxoSet,
-      sendersAddresses,
-      BigInt(fee),
+  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+
+  // Operation parameters
+  const supernetAuthAddresses: string[] = mcnAccount
+    .getAccount(provider.platformChain.id)
+    .getSignersAddresses()
+  const supernetAuthThreshold: number = supernetAuthAddresses.length
+
+  // Operation instantiation and execution
+  const createSupernetOperation: CreateSupernetOperation =
+    new CreateSupernetOperation(
       provider.platformChain,
-      sendersAddresses,
-      sendersAddresses.length,
-      masterWallet.getAddress(provider.platformChain),
-      provider.mcn.id,
+      supernetAuthAddresses,
+      supernetAuthThreshold,
     )
-  const txId: string = (
-    await provider.platformApi.issueTx(
-      createSupernetTx
-        .signTransaction([masterWallet.getWallet(provider.platformChain)])
-        .toCHex(),
+  const summary = await mcnAccount.estimate(createSupernetOperation)
+  await mcnAccount.execute(summary)
+
+  if (summary.getExecutable().status === NetworkOperationStatus.Done) {
+    console.log(
+      `Created supernet with id: ${summary.getExecutable().receipts[0].transactionId}`,
     )
-  ).txID
-  console.log(`Created supernet with id: ${txId}`)
+  }
 }
 
 main().catch((error) => {

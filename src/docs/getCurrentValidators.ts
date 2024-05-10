@@ -1,4 +1,8 @@
-import { GetCurrentValidatorsResponse, MCNProvider, SocotraNetwork } from 'juneojs'
+import {
+  GetCurrentValidatorsResponse,
+  MCNProvider,
+  SocotraNetwork,
+} from 'juneojs'
 
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
