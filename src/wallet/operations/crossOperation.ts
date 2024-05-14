@@ -8,29 +8,25 @@ import {
   MCNProvider,
   MCNWallet,
   type OperationSummary,
-  SocotraJUNEAssetId,
-  SocotraJUNEChain,
-  SocotraJVMChain,
+  SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
   // the chain which we will perform the cross from
-  const juneChain: JEVMBlockchain = SocotraJUNEChain
+  const sourceChain: JEVMBlockchain = provider.juneChain
   // the chain we will perform the cross to
-  const jvmChain: JVMBlockchain = SocotraJVMChain
-  // we need balances to perform the operation
-  await mcnAccount.fetchChainsBalances()
-  const assetId: string = SocotraJUNEAssetId
+  const destinationChain: JVMBlockchain = provider.jvmChain
+  // asset id of JUNE Chain is JUNE asset id
+  const assetId: string = sourceChain.assetId
   const amount: bigint = BigInt(1_000_000_000) // 1 JUNE
-  const address: string = wallet.getAddress(jvmChain)
   // we instantiate a cross operation that we want to perform
   const cross: CrossOperation = new CrossOperation(
-    juneChain,
-    jvmChain,
+    sourceChain,
+    destinationChain,
     assetId,
     amount,
   )

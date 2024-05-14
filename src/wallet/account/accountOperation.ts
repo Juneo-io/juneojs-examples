@@ -1,35 +1,32 @@
 import * as dotenv from 'dotenv'
 import {
   type ExecutableOperation,
-  type JEVMBlockchain,
   MCNAccount,
   MCNProvider,
   MCNWallet,
   NetworkOperationStatus,
   type OperationSummary,
-  SocotraJUNEChain,
-  SocotraWJUNEAsset,
-  WrapOperation,
+  SendOperation,
+  SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
-  // the chain which we will perform an action on
-  const juneChain: JEVMBlockchain = SocotraJUNEChain
-  // we instantiate a wrap operation that we want to perform on the chain
-  const wrapOperation: WrapOperation = new WrapOperation(
-    juneChain,
-    SocotraWJUNEAsset,
-    BigInt('1000000000000000000'),
+  // we instantiate an operation that we want to perform on the chain
+  const operation: SendOperation = new SendOperation(
+    provider.juneChain,
+    provider.juneChain.assetId,
+    BigInt('1000000000000000000'), // 1 JUNE
+    '0x8fc822F43B9d4C4E83E5198C56A4FfBc43dbd19a',
   )
   // estimate returns a summary of the operation that contains data about it such as the fees to pay
   // note that if you try to estimate an operation which is not compatible with the chain
   // an error will be thrown. If you try to do an operation on a chain which is not
   // registered in the MCNAccount you will also encounter an error
-  const summary: OperationSummary = await mcnAccount.estimate(wrapOperation)
+  const summary: OperationSummary = await mcnAccount.estimate(operation)
   console.log(summary.fees)
   // from the summary we can get the executable operation that will be used to perform it
   const executable: ExecutableOperation = summary.getExecutable()
@@ -43,7 +40,7 @@ async function main() {
   // MCNOperationStatus.Error indicates that an error occured on one of the transactions and it stopped the operation
   // MCNOperationStatus.Timeout indicates that the executable stopped its execution because it was too long
 
-  // because in this example we are doing a wrap operation which is pretty simple
+  // because in this example we are doing a send operation which is pretty simple
   // there should be no more than one receipt into it but for more complex operations
   // there could be more transactions that are sent
 }

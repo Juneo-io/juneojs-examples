@@ -1,41 +1,40 @@
 import * as dotenv from 'dotenv'
 import {
-  type CreateSupernetTransaction,
+  CreateSupernetOperation,
+  MCNAccount,
   MCNProvider,
   MCNWallet,
-  type Utxo,
-  buildCreateSupernetTransaction,
-  fetchUtxos,
+  NetworkOperationStatus,
+  SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
-  const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
-  const sendersAddresses: string[] = [
-    masterWallet.getAddress(provider.platform.chain),
-  ]
-  const utxoSet: Utxo[] = await fetchUtxos(provider.platform, sendersAddresses)
-  const fee: number = (await provider.info.getTxFee()).createSupernetTxFee
-  const createSupernetTx: CreateSupernetTransaction =
-    buildCreateSupernetTransaction(
-      utxoSet,
-      sendersAddresses,
-      BigInt(fee),
-      provider.platform.chain,
-      sendersAddresses,
-      sendersAddresses.length,
-      masterWallet.getAddress(provider.platform.chain),
-      provider.mcn.id,
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
+  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+
+  // Operation parameters
+  const supernetAuthAddresses: string[] = mcnAccount
+    .getAccount(provider.platformChain.id)
+    .getSignersAddresses()
+  const supernetAuthThreshold: number = supernetAuthAddresses.length
+
+  // Operation instantiation and execution
+  const createSupernetOperation: CreateSupernetOperation =
+    new CreateSupernetOperation(
+      provider.platformChain,
+      supernetAuthAddresses,
+      supernetAuthThreshold,
     )
-  const txId: string = (
-    await provider.platform.issueTx(
-      createSupernetTx
-        .signTransaction([masterWallet.getWallet(provider.platform.chain)])
-        .toCHex(),
+  const summary = await mcnAccount.estimate(createSupernetOperation)
+  await mcnAccount.execute(summary)
+
+  if (summary.getExecutable().status === NetworkOperationStatus.Done) {
+    console.log(
+      `Created supernet with id: ${summary.getExecutable().receipts[0].transactionId}`,
     )
-  ).txID
-  console.log(`Created supernet with id: ${txId}`)
+  }
 }
 
 main().catch((error) => {

@@ -1,35 +1,31 @@
 import * as dotenv from 'dotenv'
 import {
-  Address,
-  type CreateChainTransaction,
-  CreateSupernetTransaction,
-  DynamicId,
   EVMAllocation,
   MCNProvider,
   MCNWallet,
   SupernetEVMGenesis,
-  type Utxo,
-  buildCreateChainTransaction,
-  fetchUtxos,
+  SocotraNetwork,
+  CreateChainOperation,
+  NetworkOperationStatus,
+  MCNAccount,
 } from 'juneojs'
+import {
+  chainIdCheck,
+  chainNameCheck,
+  genesisMintAddressCheck,
+  supernetIdCheck,
+} from './_checks.spec'
 
 dotenv.config()
 async function main() {
-  const provider: MCNProvider = new MCNProvider()
-  const masterWallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
-  const sendersAddresses: string[] = [
-    masterWallet.getAddress(provider.platform.chain),
-  ]
-  const utxoSet: Utxo[] = await fetchUtxos(provider.platform, sendersAddresses)
-  const fee: number = (await provider.info.getTxFee()).createBlockchainTxFee
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
+  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+
+  // Operation parameters
   const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
-  const createSupernetTx: CreateSupernetTransaction =
-    CreateSupernetTransaction.parse(
-      (await provider.platform.getTx(supernetId)).tx,
-    )
   const chainName: string = 'Chain A'
-  const vmId: DynamicId = new DynamicId('supernetevm')
-  const fxIds: DynamicId[] = []
+  const vmId: string = 'supernetevm'
   const chainId: number = 330333
   const genesisMintAddress: string =
     '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
@@ -38,42 +34,28 @@ async function main() {
     new EVMAllocation(genesisMintAddress, genesisMintAmount),
   ]).generate()
 
-  // Checks, if not updated will throw error
-  if (supernetId === 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP')
-    throw Error(
-      'Please update the supernetId variable to that of a supernet you wish to validate.',
-    )
-  if (chainName === 'Chain A')
-    throw Error('Please update the chainName variable.')
-  if (chainId === 330333) throw Error('Please update the chainId variable.')
-  if (genesisMintAddress === '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C')
-    throw Error(
-      'Please update the genesisMintAddress variable to an address you can access.',
-    )
+  // Checks before executing script
+  supernetIdCheck(supernetId)
+  chainNameCheck(chainName)
+  chainIdCheck(chainId)
+  genesisMintAddressCheck(genesisMintAddress)
 
-  const createChainTx: CreateChainTransaction = buildCreateChainTransaction(
-    utxoSet,
-    sendersAddresses,
-    BigInt(fee),
-    provider.platform.chain,
+  // Operation instantiation and execution
+  const createChainOperation: CreateChainOperation = new CreateChainOperation(
+    provider.platformChain,
     supernetId,
     chainName,
-    provider.platform.chain.assetId,
     vmId,
-    fxIds,
     genesisData,
-    createSupernetTx.getSupernetAuth(Address.toAddresses(sendersAddresses)),
-    masterWallet.getAddress(provider.platform.chain),
-    provider.mcn.id,
   )
-  const txId: string = (
-    await provider.platform.issueTx(
-      createChainTx
-        .signTransaction([masterWallet.getWallet(provider.platform.chain)])
-        .toCHex(),
+  const summary = await mcnAccount.estimate(createChainOperation)
+  await mcnAccount.execute(summary)
+
+  if (summary.getExecutable().status === NetworkOperationStatus.Done) {
+    console.log(
+      `Created chain with id: ${summary.getExecutable().receipts[0].transactionId}`,
     )
-  ).txID
-  console.log(`Created chain with id: ${txId}`)
+  }
 }
 
 main().catch((error) => {
