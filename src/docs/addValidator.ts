@@ -23,7 +23,8 @@ async function main() {
   const startTime: bigint = now() + BigInt(30)
   // the time to end the validation with start time is staking period
   // staking period has a minimal and maximal value
-  const endTime: bigint = now() + BigInt(86400 * 15)
+  const durationInDays: number = 20
+  const endTime: bigint = now() + BigInt(86400 * durationInDays)
   const stakeAddresses: string[] = []
   const validateOperation: ValidatePrimaryOperation =
     new ValidatePrimaryOperation(

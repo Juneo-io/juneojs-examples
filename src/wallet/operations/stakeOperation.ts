@@ -1,16 +1,16 @@
 import * as dotenv from 'dotenv'
 import {
   DelegatePrimaryOperation,
-  type ExecutableOperation,
   MCNAccount,
   MCNProvider,
   MCNWallet,
   NetworkOperationStatus,
-  type OperationSummary,
-  type StakingOperationSummary,
   SocotraNetwork,
   ValidatePrimaryOperation,
   now,
+  type ExecutableOperation,
+  type OperationSummary,
+  type StakingOperationSummary,
 } from 'juneojs'
 
 dotenv.config()
@@ -26,7 +26,10 @@ async function main() {
   const startTime: bigint = now() + BigInt(30)
   // the time to end the validate with start time is staking period
   // staking period has a minimal and maximal value
-  const endTime: bigint = startTime + BigInt(86400 * 15)
+  // the min duration is 14 days. But if you want to create delegation on the node
+  // you should set a duration higher than 14 days
+  const durationInDays: number = 20
+  const endTime: bigint = startTime + BigInt(86400 * durationInDays)
   const stakeAddresses: string[] = [
     mcnAccount.getAccount(provider.platformChain.id).address,
   ]
