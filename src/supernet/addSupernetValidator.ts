@@ -1,11 +1,11 @@
 import * as dotenv from 'dotenv'
 import {
+  AddSupernetValidatorOperation,
+  MCNAccount,
   MCNProvider,
   MCNWallet,
   SocotraNetwork,
   now,
-  AddSupernetValidatorOperation,
-  MCNAccount,
 } from 'juneojs'
 import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 
@@ -18,7 +18,8 @@ async function main() {
   // Operation parameters
   const nodeId: string = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
   const startTime: bigint = now() + BigInt(30)
-  const durationInDays: number = 4
+  
+  const durationInDays: number = 20
   const endTime: bigint = startTime + BigInt(3600 * 24 * durationInDays + 30)
   const weight: bigint = BigInt(100)
   const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
