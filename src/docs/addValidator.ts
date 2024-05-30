@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv'
 import {
   MCNAccount,
   MCNProvider,
@@ -6,6 +7,7 @@ import {
   ValidatePrimaryOperation,
   now,
 } from 'juneojs'
+dotenv.config()
 
 async function main() {
   // provider to interact with the MCN
