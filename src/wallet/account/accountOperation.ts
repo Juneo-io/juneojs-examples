@@ -13,7 +13,10 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
   // we instantiate an operation that we want to perform on the chain
   const operation: SendOperation = new SendOperation(

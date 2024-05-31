@@ -16,7 +16,10 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
   // the node id where to validate funds
   const nodeId: string = 'NodeID-DXGCAZFrcwfBmgXMePrTm2EU8N3s46wEq'

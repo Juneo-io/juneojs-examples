@@ -1,21 +1,24 @@
 import * as dotenv from 'dotenv'
 import {
   EVMAccount,
+  JVMAccount,
   MCNAccount,
   MCNProvider,
   MCNWallet,
+  SocotraNetwork,
   SocotraWJUNEAsset,
+  UtxoAccount,
   type AssetValue,
   type ChainAccount,
-  UtxoAccount,
-  JVMAccount,
-  SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   // create a MCNAccount from the provider with the chains of the default used MCN
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
   // getting the account of one chain

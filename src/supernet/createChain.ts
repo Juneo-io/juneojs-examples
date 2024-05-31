@@ -1,13 +1,13 @@
 import * as dotenv from 'dotenv'
 import {
+  CreateChainOperation,
   EVMAllocation,
+  MCNAccount,
   MCNProvider,
   MCNWallet,
-  SupernetEVMGenesis,
-  SocotraNetwork,
-  CreateChainOperation,
   NetworkOperationStatus,
-  MCNAccount,
+  SocotraNetwork,
+  SupernetEVMGenesis,
 } from 'juneojs'
 import {
   chainIdCheck,
@@ -19,7 +19,10 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
 
   // Operation parameters

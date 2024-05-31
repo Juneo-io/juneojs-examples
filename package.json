@@ -1,6 +1,6 @@
 {
   "name": "juneojs-examples",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Usage examples of JuneoJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
