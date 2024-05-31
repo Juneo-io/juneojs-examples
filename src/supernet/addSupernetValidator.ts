@@ -12,13 +12,16 @@ import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
 
   // Operation parameters
   const nodeId: string = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
   const startTime: bigint = now() + BigInt(30)
-  
+
   const durationInDays: number = 20
   const endTime: bigint = startTime + BigInt(3600 * 24 * durationInDays + 30)
   const weight: bigint = BigInt(100)

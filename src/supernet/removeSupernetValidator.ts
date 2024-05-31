@@ -1,17 +1,20 @@
 import * as dotenv from 'dotenv'
 import {
+  MCNAccount,
   MCNProvider,
   MCNWallet,
-  SocotraNetwork,
   RemoveSupernetValidatorOperation,
-  MCNAccount,
+  SocotraNetwork,
 } from 'juneojs'
 import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
 
   // Operation parameters

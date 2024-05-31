@@ -13,7 +13,10 @@ async function main() {
   // provider to interact with the MCN
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   // recovering wallet used to sign transactions
-  const wallet: MCNWallet = MCNWallet.recover(process.env.MNEMONIC ?? '')
+  const wallet: MCNWallet = MCNWallet.recover(
+    process.env.MNEMONIC ?? '',
+    provider.mcn.hrp,
+  )
   // an account is needed to use operations
   const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
 
