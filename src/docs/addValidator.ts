@@ -4,8 +4,8 @@ import {
   MCNProvider,
   MCNWallet,
   SocotraNetwork,
+  TimeUtils,
   ValidatePrimaryOperation,
-  now,
 } from 'juneojs'
 dotenv.config()
 
@@ -25,11 +25,11 @@ async function main() {
   // the amount to validate
   const stakeAmount: bigint = BigInt(100 * 10 ** 9) // 100 JUNE
   // the time to start delegation (must be > now)
-  const startTime: bigint = now() + BigInt(30)
+  const startTime: bigint = TimeUtils.now() + BigInt(30)
   // the time to end the validation with start time is staking period
   // staking period has a minimal and maximal value
   const durationInDays: number = 20
-  const endTime: bigint = now() + BigInt(86400 * durationInDays)
+  const endTime: bigint = TimeUtils.now() + BigInt(86400 * durationInDays)
   const stakeAddresses: string[] = []
   const validateOperation: ValidatePrimaryOperation =
     new ValidatePrimaryOperation(
