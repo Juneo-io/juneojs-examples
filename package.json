@@ -31,6 +31,6 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "juneojs": "0.0.116"
+    "juneojs": "0.0.117"
   }
 }
