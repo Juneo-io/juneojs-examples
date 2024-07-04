@@ -6,8 +6,8 @@ import {
   MCNWallet,
   NetworkOperationStatus,
   SocotraNetwork,
+  TimeUtils,
   ValidatePrimaryOperation,
-  now,
   type ExecutableOperation,
   type OperationSummary,
   type StakingOperationSummary,
@@ -26,7 +26,7 @@ async function main() {
   // the amount to validate
   const stakeAmount: bigint = BigInt(1000000000)
   // the time to start validate (must be > now)
-  const startTime: bigint = now() + BigInt(30)
+  const startTime: bigint = TimeUtils.now() + BigInt(30)
   // the time to end the validate with start time is staking period
   // staking period has a minimal and maximal value
   // the min duration is 14 days. But if you want to create delegation on the node

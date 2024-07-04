@@ -5,7 +5,7 @@ import {
   MCNProvider,
   MCNWallet,
   SocotraNetwork,
-  now,
+  TimeUtils,
 } from 'juneojs'
 import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 
@@ -20,7 +20,7 @@ async function main() {
 
   // Operation parameters
   const nodeId: string = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
-  const startTime: bigint = now() + BigInt(30)
+  const startTime: bigint = TimeUtils.now() + BigInt(30)
 
   const durationInDays: number = 20
   const endTime: bigint = startTime + BigInt(3600 * 24 * durationInDays + 30)
