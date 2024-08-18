@@ -3,7 +3,7 @@ import {
   AddSupernetValidatorOperation,
   MCNAccount,
   MCNProvider,
-  MCNWallet,
+  OperationSummary,
   SocotraNetwork,
   TimeUtils,
 } from 'juneojs'
@@ -12,37 +12,31 @@ import { nodeIdCheck, supernetIdCheck } from './_checks.spec'
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(
-    process.env.MNEMONIC ?? '',
-    provider.mcn.hrp,
-  )
-  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+  const account: MCNAccount = provider.recoverAccount(process.env.MNEMONIC!)
 
   // Operation parameters
-  const nodeId: string = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
-  const startTime: bigint = TimeUtils.now() + BigInt(30)
-
-  const durationInDays: number = 20
-  const endTime: bigint = startTime + BigInt(3600 * 24 * durationInDays + 30)
-  const weight: bigint = BigInt(100)
-  const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
+  const nodeId = 'NodeID-B2GHMQ8GF6FyrvmPUX6miaGeuVLH9UwHr'
+  const durationInDays = 20
+  const stakeDuration = TimeUtils.day() * BigInt(durationInDays)
+  const weight = BigInt(100)
+  const supernetId = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
 
   // Checks before executing script
   supernetIdCheck(supernetId)
   nodeIdCheck(nodeId)
 
   // Operation instantiation and execution
-  const addSupernetValidatorOperation: AddSupernetValidatorOperation =
-    new AddSupernetValidatorOperation(
-      provider.platformChain,
-      supernetId,
-      nodeId,
-      weight,
-      startTime,
-      endTime,
-    )
-  const summary = await mcnAccount.estimate(addSupernetValidatorOperation)
-  await mcnAccount.execute(summary)
+  const addSupernetValidatorOperation = new AddSupernetValidatorOperation(
+    provider.platformChain,
+    supernetId,
+    nodeId,
+    weight,
+    stakeDuration,
+  )
+  const summary: OperationSummary = await account.estimate(
+    addSupernetValidatorOperation,
+  )
+  await account.execute(summary)
 }
 
 main().catch((error) => {

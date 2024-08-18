@@ -3,36 +3,34 @@ import {
   CreateSupernetOperation,
   MCNAccount,
   MCNProvider,
-  MCNWallet,
   NetworkOperationStatus,
+  OperationSummary,
   SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(
-    process.env.MNEMONIC ?? '',
-    provider.mcn.hrp,
-  )
-  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+  const account: MCNAccount = provider.recoverAccount(process.env.MNEMONIC!)
 
   // Operation parameters
-  const supernetAuthAddresses: string[] = mcnAccount
+  const supernetAuthAddresses: string[] = account
     .getAccount(provider.platformChain.id)
     .getSignersAddresses()
-  const supernetAuthThreshold: number = supernetAuthAddresses.length
+  const supernetAuthThreshold = supernetAuthAddresses.length
 
   // Operation instantiation and execution
-  const createSupernetOperation: CreateSupernetOperation =
-    new CreateSupernetOperation(
-      provider.platformChain,
-      supernetAuthAddresses,
-      supernetAuthThreshold,
-    )
-  const summary = await mcnAccount.estimate(createSupernetOperation)
-  await mcnAccount.execute(summary)
+  const createSupernetOperation = new CreateSupernetOperation(
+    provider.platformChain,
+    supernetAuthAddresses,
+    supernetAuthThreshold,
+  )
+  const summary: OperationSummary = await account.estimate(
+    createSupernetOperation,
+  )
+  await account.execute(summary)
 
+  console.log(summary.getExecutable().status)
   if (summary.getExecutable().status === NetworkOperationStatus.Done) {
     console.log(
       `Created supernet with id: ${summary.getExecutable().receipts[0].transactionId}`,

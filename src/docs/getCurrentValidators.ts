@@ -1,20 +1,14 @@
-import {
-  GetCurrentValidatorsResponse,
-  MCNProvider,
-  SocotraNetwork,
-} from 'juneojs'
+import { MCNProvider, SocotraNetwork } from 'juneojs'
 
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const currentValidators: GetCurrentValidatorsResponse =
-    await provider.platformApi.getCurrentValidators()
-  const nodeId: string = 'NodeID-DXGCAZFrcwfBmgXMePrTm2EU8N3s46wEq'
+  const nodeId = 'NodeID-DXGCAZFrcwfBmgXMePrTm2EU8N3s46wEq'
+  const currentValidators = await provider.platformApi.getCurrentValidators(
+    provider.mcn.primary.id,
+    [nodeId],
+  )
   console.log(`Looking for node: ${nodeId}...`)
-  for (const validator of currentValidators.validators) {
-    if (validator.nodeID === nodeId) {
-      console.log(JSON.stringify(validator))
-    }
-  }
+  console.log(JSON.stringify(currentValidators.validators[0]))
   console.log('Done')
 }
 

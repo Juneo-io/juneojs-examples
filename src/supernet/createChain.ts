@@ -4,8 +4,8 @@ import {
   EVMAllocation,
   MCNAccount,
   MCNProvider,
-  MCNWallet,
   NetworkOperationStatus,
+  OperationSummary,
   SocotraNetwork,
   SupernetEVMGenesis,
 } from 'juneojs'
@@ -19,20 +19,15 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(
-    process.env.MNEMONIC ?? '',
-    provider.mcn.hrp,
-  )
-  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+  const account: MCNAccount = provider.recoverAccount(process.env.MNEMONIC!)
 
   // Operation parameters
-  const supernetId: string = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
-  const chainName: string = 'Chain A'
-  const vmId: string = 'supernetevm'
-  const chainId: number = 330333
-  const genesisMintAddress: string =
-    '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
-  const genesisMintAmount: bigint = BigInt('1000000000000000000000000')
+  const supernetId = 'ZxTjijy4iNthRzuFFzMH5RS2BgJemYxwgZbzqzEhZJWqSnwhP'
+  const chainName = 'Chain A'
+  const vmId = 'supernetevm'
+  const chainId = 330333
+  const genesisMintAddress = '0x44542FD7C3F096aE54Cc07833b1C0Dcf68B7790C'
+  const genesisMintAmount = BigInt('1000000000000000000000000')
   const genesisData: string = new SupernetEVMGenesis(chainId, [
     new EVMAllocation(genesisMintAddress, genesisMintAmount),
   ]).generate()
@@ -44,16 +39,17 @@ async function main() {
   genesisMintAddressCheck(genesisMintAddress)
 
   // Operation instantiation and execution
-  const createChainOperation: CreateChainOperation = new CreateChainOperation(
+  const createChainOperation = new CreateChainOperation(
     provider.platformChain,
     supernetId,
     chainName,
     vmId,
     genesisData,
   )
-  const summary = await mcnAccount.estimate(createChainOperation)
-  await mcnAccount.execute(summary)
+  const summary: OperationSummary = await account.estimate(createChainOperation)
+  await account.execute(summary)
 
+  console.log(summary.getExecutable().status)
   if (summary.getExecutable().status === NetworkOperationStatus.Done) {
     console.log(
       `Created chain with id: ${summary.getExecutable().receipts[0].transactionId}`,
