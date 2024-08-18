@@ -1,18 +1,23 @@
 import {
+  MCNProvider,
   MCNWallet,
-  type VMWallet,
-  SocotraJVMChain,
   SocotraJUNEChain,
+  SocotraJVMChain,
+  SocotraNetwork,
+  type VMWallet,
 } from 'juneojs'
 
 async function main() {
+  const provider: MCNProvider = new MCNProvider(SocotraNetwork)
   // generating new master wallet
-  const masterWallet: MCNWallet = MCNWallet.generate()
+  const wallet: MCNWallet = provider.mcn.generateWallet()
+  // can also be done this way with 12 being words count
+  const wallet2 = new MCNWallet(provider.mcn.hrp, 12)
   // generated mnemonic
-  console.log(masterWallet.mnemonic)
-  const jvmChainAddress: string = masterWallet.getAddress(SocotraJVMChain)
+  console.log(wallet.mnemonic)
+  const jvmChainAddress: string = wallet.getAddress(SocotraJVMChain)
   console.log(jvmChainAddress)
-  const juneChainWallet: VMWallet = masterWallet.getWallet(SocotraJUNEChain)
+  const juneChainWallet: VMWallet = wallet.getWallet(SocotraJUNEChain)
   // june chain jeth address
   console.log(juneChainWallet.getJuneoAddress())
   // june chain evm hex address

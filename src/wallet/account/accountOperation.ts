@@ -3,7 +3,6 @@ import {
   type ExecutableOperation,
   MCNAccount,
   MCNProvider,
-  MCNWallet,
   NetworkOperationStatus,
   type OperationSummary,
   SendOperation,
@@ -13,13 +12,9 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(
-    process.env.MNEMONIC ?? '',
-    provider.mcn.hrp,
-  )
-  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+  const account: MCNAccount = provider.recoverAccount(process.env.MNEMONIC!)
   // we instantiate an operation that we want to perform on the chain
-  const operation: SendOperation = new SendOperation(
+  const operation = new SendOperation(
     provider.juneChain,
     provider.juneChain.assetId,
     BigInt('1000000000000000000'), // 1 JUNE
@@ -29,11 +24,11 @@ async function main() {
   // note that if you try to estimate an operation which is not compatible with the chain
   // an error will be thrown. If you try to do an operation on a chain which is not
   // registered in the MCNAccount you will also encounter an error
-  const summary: OperationSummary = await mcnAccount.estimate(operation)
+  const summary: OperationSummary = await account.estimate(operation)
   console.log(summary.fees)
   // from the summary we can get the executable operation that will be used to perform it
   const executable: ExecutableOperation = summary.getExecutable()
-  await mcnAccount.execute(summary)
+  await account.execute(summary)
   // the executable has fields that can help keeping track of the current state of the operation
   console.log(executable.status === NetworkOperationStatus.Done)
   // a list of the current receipts created by the operation is also available

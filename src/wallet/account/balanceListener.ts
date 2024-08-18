@@ -5,19 +5,14 @@ import {
   type ChainAccount,
   MCNAccount,
   MCNProvider,
-  MCNWallet,
   SocotraNetwork,
 } from 'juneojs'
 
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(
-    process.env.MNEMONIC ?? '',
-    provider.mcn.hrp,
-  )
-  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
-  const juneAccount: ChainAccount = mcnAccount.getAccount(provider.juneChain.id)
+  const account: MCNAccount = provider.recoverAccount(process.env.MNEMONIC!)
+  const juneAccount: ChainAccount = account.getAccount(provider.juneChain.id)
   // the asset id of the balance we will listen to
   const assetId: string = provider.juneChain.assetId
   // the listener we want to use

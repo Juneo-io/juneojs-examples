@@ -6,7 +6,6 @@ import {
   type JVMBlockchain,
   MCNAccount,
   MCNProvider,
-  MCNWallet,
   type OperationSummary,
   SocotraNetwork,
 } from 'juneojs'
@@ -14,30 +13,26 @@ import {
 dotenv.config()
 async function main() {
   const provider: MCNProvider = new MCNProvider(SocotraNetwork)
-  const wallet: MCNWallet = MCNWallet.recover(
-    process.env.MNEMONIC ?? '',
-    provider.mcn.hrp,
-  )
-  const mcnAccount: MCNAccount = new MCNAccount(provider, wallet)
+  const account: MCNAccount = provider.recoverAccount(process.env.MNEMONIC!)
   // the chain which we will perform the cross from
   const sourceChain: JEVMBlockchain = provider.juneChain
   // the chain we will perform the cross to
   const destinationChain: JVMBlockchain = provider.jvmChain
   // asset id of JUNE Chain is JUNE asset id
   const assetId: string = sourceChain.assetId
-  const amount: bigint = BigInt(1_000_000_000) // 1 JUNE
+  const amount = BigInt(1_000_000_000) // 1 JUNE
   // we instantiate a cross operation that we want to perform
-  const cross: CrossOperation = new CrossOperation(
+  const cross = new CrossOperation(
     sourceChain,
     destinationChain,
     assetId,
     amount,
   )
   // estimate the operation
-  const summary: OperationSummary = await mcnAccount.estimate(cross)
+  const summary: OperationSummary = await account.estimate(cross)
   console.log(summary.fees)
   // execute the operation
-  await mcnAccount.execute(summary)
+  await account.execute(summary)
   const executable: ExecutableOperation = summary.getExecutable()
   // the receipts should contain multiple transaction ids
   // that were performed to complete the cross operation
