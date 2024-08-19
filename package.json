@@ -31,7 +31,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "juneojs": "0.0.131",
+    "juneojs": "0.0.132",
     "juneojs-examples": "file:"
   }
 }
